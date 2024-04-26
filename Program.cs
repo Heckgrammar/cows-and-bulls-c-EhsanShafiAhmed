@@ -10,63 +10,67 @@ namespace CowsAndBulls
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the Cows and Bulls Game!"); 
-        Console.WriteLine("Try to guess the secret 4-digit number."); 
-  
-        // Generate a random 4-digit number 
-        Random random = new Random(); 
-        int[] secretNumber = new int[4]; 
-        for (int i = 0; i < 4; i++) 
-        { 
-            secretNumber[i] = random.Next(0, 10); 
-        } 
-  
-        int attempts = 0; 
-        int cows, bulls; 
-        do 
-        { 
-            // Ask for user input 
-            Console.Write("Enter your guess (4 digits): "); 
-            string guessStr = Console.ReadLine(); 
-  
-            // Convert user input to array 
-            int[] guess = new int[4]; 
-            for (int i = 0; i < 4; i++) 
-            { 
-                guess[i] = int.Parse(guessStr[i].ToString()); 
-            } 
-  
-            // Check for cows and bulls 
-            cows = 0; 
-            bulls = 0; 
-            for (int i = 0; i < 4; i++) 
-            { 
-                if (guess[i] == secretNumber[i]) 
-                { 
-                    bulls++; 
-                } 
-                else 
-                { 
-                    for (int j = 0; j < 4; j++) 
-                    { 
-                        if (guess[i] == secretNumber[j]) 
-                        { 
-                            cows++; 
-                            break; 
-                        } 
-                    } 
-                } 
-            } 
-  
-            // Display result 
-            Console.WriteLine("Cows: " + cows +  Bulls: " +  bulls); 
-            attempts++; 
-  
-        } while (bulls < 4); 
-  
-        Console.WriteLine("Congratulations! You guessed the number in" + attempts +  "attempts."); 
+Random random = new Random();
+        int[] secretNumber = new int[4];
+        int[] guessNumber = new int[4];
+        bool found = false;
 
-            
+        // Generate a random 4-digit number without repeating digits
+        for (int i = 0; i < secretNumber.Length; i++)
+        {
+            int randomNumber;
+            do
+            {
+                randomNumber = random.Next(10);
+            } while (Array.IndexOf(secretNumber, randomNumber) != -1);
+
+            secretNumber[i] = randomNumber;
         }
+
+        Console.WriteLine("Welcome to Cows and Bulls game!");
+
+        while (!found)
+        {
+            Console.Write("Enter your guess (4 digits): ");
+            string input = Console.ReadLine();
+
+            // Validate input
+            if (input.Length != 4 || !int.TryParse(input, out guessNumber[0]))
+            {
+                Console.WriteLine("Please enter a valid 4-digit number.");
+                continue;
+            }
+
+            // Convert string input to integer array
+            for (int i = 0; i < input.Length; i++)
+            {
+                guessNumber[i] = input[i] - '0';
+            }
+
+            // Check for cows and bulls
+            int cows = 0;
+            int bulls = 0;
+
+            for (int i = 0; i < guessNumber.Length; i++)
+            {
+                if (guessNumber[i] == secretNumber[i])
+                {
+                    bulls++;
+                }
+                else if (Array.IndexOf(secretNumber, guessNumber[i]) != -1)
+                {
+                    cows++;
+                }
+            }
+
+            // Print result
+            Console.WriteLine("Cows:" + cows + " Bulls: " + bulls);
+
+            // Check if the guess is correct
+            if (bulls == 4)
+            {
+                Console.WriteLine("Congratulations! You've guessed the correct number!");
+                found = true;
+			}
     }
-}
+ }
